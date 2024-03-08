@@ -1,0 +1,138 @@
+// Van Zwam Arjen 
+// Gruppo: ByteRebels
+// Di seguito il codice Originale:
+
+#include <stdio.h>
+
+void menu ();
+void moltiplica ();
+void dividi ();
+void ins_string();
+
+
+int main () 
+
+{
+	char scelta = {'\0'};
+	menu ();
+	scanf ("%d", &scelta);
+
+	switch (scelta)
+	{
+		case 'A':
+		moltiplica();
+		break;
+		case 'B':
+                dividi();
+                break;
+		case 'C':
+                ins_string();
+                break;
+	}
+
+return 0;
+
+}
+
+
+void menu ()
+{
+	printf ("Benvenuto, sono un assitente digitale, posso aiutarti a sbrigare alcuni compiti\n");
+	printf ("Come posso aiutarti?\n");
+	printf ("A >> Moltiplicare due numeri\nB >> Dividere due numeri\nC >> Inserire una stringa\n");
+
+}
+
+
+void moltiplica ()
+{
+	short int  a,b = 0;
+	printf ("Inserisci i due numeri da moltiplicare:");
+	scanf ("%f", &a);
+	scanf ("%d", &b);
+
+	short int prodotto = a * b;
+
+	printf ("Il prodotto tra %d e %d e': %d", a,b,prodotto);
+}
+
+
+void dividi ()
+{
+        int  a,b = 0;
+        printf ("Inserisci il numeratore:");
+        scanf ("%d", &a);
+	printf ("Inserisci il denumeratore:");
+        scanf ("%d", &b);
+
+        int divisione = a % b;
+
+        printf ("La divisione tra %d e %d e': %d", a,b,divisione);
+}
+
+
+
+
+
+void ins_string () 
+{
+	char stringa[10];
+        printf ("Inserisci la stringa:");
+        scanf ("%s", &stringa);
+}
+
+
+ERRORI RISCONTRATI:
+
+Riga 14:
+scanf ("%d", &scelta); // Dovrebbe essere scanf ("%c", &scelta); siccome si tratta di variabile di tipo CHAR e non int
+
+
+Riga 47:
+scanf ("%f", &a); // Dovrebbe essere scanf ("%hd", &a); siccome si tratta di variabile di tipo short
+
+
+Riga 48:
+scanf ("%d", &b); // Dovrebbe essere scanf ("%hd", &a); siccome si tratta di variabile di tipo short
+
+
+Riga 61:
+printf ("Inserisci il denumeratore:"); // Se vogliamo essere pignoli si scrive "denominatore"
+
+
+Riga 64:
+int divisione = a % b; // La divisione si fa con / e non con %
+
+
+Funzione void dividi():
+Manca un controllo nel caso in cui la divisione sia con lo 0, quindi ipotizzerei un controllo sotto la riga 62: 
+if (b == 0){
+printf ("Non puoi dividere per zero\n");
+return
+} 
+
+
+Funzione ins_string():
+Manca un controllo nel caso in cui l'utente inserisca più di 10 caratteri.
+Riga 75:
+char stringa[10]; // Sarà char stringa[11]; per avere 10 caratteri e non 9 (n-1)
+getchar(); // Inserito prima di scanf permetterà di attendere un valore oltre non andare a capo.
+Riga 77:
+scanf ("%s", &stringa);  // Dovrebbe essere scanf("%c", &stringa); siccome si tratta di variabile di tipo CHAR
+scanf ("%s", &stringa); //  Meglio ancora, insieme ai compagni abbiamo ipotizzato che dovrebbe essere scanf("%10[^\n]", stringa);  ossia legge i 10 caratteri e col valore ^ indica che oltre tali caratteri non legge
+
+Funzione int main():
+Manca un controllo nel caso in cui l'utente prema altre lettere al di fuori di A, B e C.
+Sotto la linea 26 ipotizzerei un
+default:
+printf("Digita una delle opzioni descritte!\n"); // Per fare in modo che se l'utenta prema ad esempio D il programma abbia contemplato l'ipotesi e non crashi
+
+Funzione int main():
+Manca anche un altro controllo nel caso del case sensitive, ipotizzerei l'inserimento di un controllo come:
+if(scelta == 'A' ||  scelta == 'a') {
+per ogni case, quindi:
+if(scelta == 'B' ||  scelta == 'b') {
+if(scelta == 'C' ||  scelta == 'c') {
+Per farlo più corretto possibile però si ipotizzava con i compagni di includere un'altra libreria e di inserire sotto la riga 14:
+scelta = toupper(scelta); // Ossia tutte le lettere saranno lette in case sentitive 
+#include <ctype.h> // la libreria da includere in alto al programma
